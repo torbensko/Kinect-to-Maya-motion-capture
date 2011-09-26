@@ -1,0 +1,9 @@
+<Modules>
+    <Module path="E:\Win32bin\Develop\Kinect\OpenNI\bin\nimRecorder.dll" />
+    <Module path="E:\Win32bin\Develop\Kinect\OpenNI\bin\nimMockNodes.dll" />
+    <Module path="E:\Win32bin\Develop\Kinect\OpenNI\bin\nimCodecs.dll" />
+    <Module path="E:\Win32bin\Develop\Kinect\Sensor\Bin\XnDeviceFile.dll" />
+    <Module path="E:\Win32bin\Develop\Kinect\Sensor\Bin\XnDeviceSensorV2.dll" configDir="E:\Win32bin\Develop\Kinect\Sensor\Data" />
+    <Module path="E:\Win32bin\Develop\Kinect\NITE\Features\Bin\XnVFeatures.dll" configDir="E:\Win32bin\Develop\Kinect\NITE\Features\Data" />
+    <Module path="E:\Win32bin\Develop\Kinect\NITE\Hands\Bin\XnVHandGenerator.dll" configDir="E:\Win32bin\Develop\Kinect\NITE\Hands\Data" />
+</Modules>

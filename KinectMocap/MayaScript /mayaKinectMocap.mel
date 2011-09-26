@@ -1,0 +1,87 @@
+
+// This code is provided under a Creative Commons Attribution license 
+// http://creativecommons.org/licenses/by/3.0/
+// As such you are free to use the code for any purpose as 
+// long as you remember to mention our names (Torben Sko and Beau Vardos) 
+// at some point.
+// 
+// Please also note that my code is provided AS IS with NO WARRANTY 
+// OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS
+// FOR A PARTICULAR PURPOSE.
+
+
+
+global string $ReducedSkelNames[] = {
+	"SKEL_HEAD",
+	"SKEL_NECK",
+	"SKEL_TORSO",				// "SKEL_WAIST", "SKEL_LEFT_COLLAR",
+	
+	"SKEL_LEFT_SHOULDER",
+	"SKEL_LEFT_ELBOW",			// "SKEL_LEFT_WRIST",
+	"SKEL_LEFT_HAND",			// "SKEL_LEFT_FINGERTIP", "SKEL_RIGHT_COLLAR",
+	
+	"SKEL_RIGHT_SHOULDER",
+	"SKEL_RIGHT_ELBOW",			// "SKEL_RIGHT_WRIST",
+	"SKEL_RIGHT_HAND",			// "SKEL_RIGHT_FINGERTIP",
+
+	"SKEL_LEFT_HIP",
+	"SKEL_LEFT_KNEE",			// "SKEL_LEFT_ANKLE",
+	"SKEL_LEFT_FOOT",
+
+	"SKEL_RIGHT_HIP",
+	"SKEL_RIGHT_KNEE",			// "SKEL_RIGHT_ANKLE",
+	"SKEL_RIGHT_FOOT"
+};
+
+global proc setKeyOnKinectLocators() {
+	global string $ReducedSkelNames[];
+	int $i = 0;
+	for($i = 0; $i < size($ReducedSkelNames); $i++) {
+		setKeyframe $ReducedSkelNames[$i];
+	}
+}
+
+global proc showMocapWindow.callbacks.startMocap() 
+{
+	float $keyingRate = `floatFieldGrp -q -v1 keying_rate`;
+	float $frames = 25 / $keyingRate;
+	string $command = "setKeyOnKinectLocators(); int $mctime = eval(\"currentTime -q\") + "+$frames+"; currentTime($mctime);";
+	python("import timer; timer.startTimerObj( " + $keyingRate + ", \"" + encodeString($command) + "\")");
+}
+
+global proc showMocapWindow.callbacks.stopMocap()
+{
+	python("import timer; timer.stopTimerObj()");
+}
+
+global proc showMocapWindow.callbacks.autoRig()
+{
+	python("import mayaKinectAutoRig; mayaKinectAutoRig.rigCharacter();");
+}
+
+global proc showMocapWindow.callbacks.autoRigHidden()
+{
+	python("import mayaKinectAutoRig; mayaKinectAutoRig.rigCharacter(show=0);");
+}
+
+global proc showMocapWindow()
+{
+	if ( eval("window -exists mocap_window" ) == true ) { return; }
+	
+	string $hwnd = `window -title "Motion Capture" -sizeable true -menuBar true mocap_window`;
+
+	string $masterLayout = `columnLayout`;
+	setParent..;
+	setParent $masterLayout;
+
+	columnLayout -adjustableColumn 1;
+		floatFieldGrp -w 200 -l "keyrate" -nf 1 -cw2 100 100 -v1 10 keying_rate;
+		button -w 200 -al "center" -l "Start" -c "showMocapWindow.callbacks.startMocap()";
+		button -w 200 -al "center" -l "Stop"  -c "showMocapWindow.callbacks.stopMocap()";
+		button -w 200 -al "center" -l "Auto Rig"  -c "showMocapWindow.callbacks.autoRig()";
+		button -w 200 -al "center" -l "Auto Rig (Hidden)"  -c "showMocapWindow.callbacks.autoRigHidden()";
+	
+	setParent..;
+	window -e -w 200 -h 140 $hwnd;
+	showWindow $hwnd;
+}

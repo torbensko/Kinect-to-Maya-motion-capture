@@ -1,0 +1,21 @@
+global proc mayaKinectGesture( string $gestureId ){
+
+	if( $gestureId == "Wave" ){
+		//Recording
+		print( "Wave Gestrue\n" );
+		
+		if( `recordDevice -d "KinectCapture" -q -st ` ){
+			recordDevice -d "KinectCapture" -st off;
+		}else{
+			enableDevice -device "KinectCapture" -monitor -enable true;
+			recordDevice -d "KinectCapture" -dr 1000 -playback on;
+		}
+		
+	}else if( $gestureId == "Click" ){
+		//Add command for "click gesture" here
+		print( "Click Gesture\n" );
+		
+	}
+	
+}
+

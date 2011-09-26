@@ -1,0 +1,134 @@
+
+global string $KinectSkelNames[] = {
+	"SKEL_HEAD",
+	"SKEL_NECK",
+	"SKEL_TORSO",
+	"SKEL_WAIST",
+
+	"SKEL_LEFT_COLLAR",
+	"SKEL_LEFT_SHOULDER",
+	"SKEL_LEFT_ELBOW",
+	"SKEL_LEFT_WRIST",
+	"SKEL_LEFT_HAND",
+	"SKEL_LEFT_FINGERTIP",
+
+	"SKEL_RIGHT_COLLAR",
+	"SKEL_RIGHT_SHOULDER",
+	"SKEL_RIGHT_ELBOW",
+	"SKEL_RIGHT_WRIST",
+	"SKEL_RIGHT_HAND",
+	"SKEL_RIGHT_FINGERTIP",
+
+	"SKEL_LEFT_HIP",
+	"SKEL_LEFT_KNEE",
+	"SKEL_LEFT_ANKLE",
+	"SKEL_LEFT_FOOT",
+
+	"SKEL_RIGHT_HIP",
+	"SKEL_RIGHT_KNEE",
+	"SKEL_RIGHT_ANKLE",
+	"SKEL_RIGHT_FOOT"
+};
+
+global proc mayaKinectCaptureTest.CallBacks.connectDevice(){
+
+	string $serverAddress = `textFieldGrp -q -tx KinectTest_TextFieldGrp_ServerAddress`;
+	$serverAddress = $serverAddress + ":" + `intFieldGrp -q -v1 KinectTest_IntFieldGrp_Port`;
+
+	print $serverAddress;
+	
+	defineDataServer -d KinectCapture -s $serverAddress;
+
+	global string $KinectSkelNames[];
+	int $i = 0;
+	
+	for( $i = 0; $i < 24; ++$i ){
+		attachDeviceAttr -d "KinectCapture" -ax ( $KinectSkelNames[$i] + "_POS:X" ) ( $KinectSkelNames[$i] + ".translateX" );
+		setAttrMapping -d "KinectCapture" -ax ( $KinectSkelNames[$i] + "_POS:X" ) -at ( $KinectSkelNames[$i] + ".translateX" ) -scale -0.01;
+		attachDeviceAttr -d "KinectCapture" -ax ( $KinectSkelNames[$i] + "_POS:Y" ) ( $KinectSkelNames[$i] + ".translateY" );
+		setAttrMapping -d "KinectCapture" -ax ( $KinectSkelNames[$i] + "_POS:Y" ) -at ( $KinectSkelNames[$i] + ".translateY" ) -scale 0.01;
+		attachDeviceAttr -d "KinectCapture" -ax ( $KinectSkelNames[$i] + "_POS:Z" ) ( $KinectSkelNames[$i] + ".translateZ" );
+		setAttrMapping -d "KinectCapture" -ax ( $KinectSkelNames[$i] + "_POS:Z" ) -at ( $KinectSkelNames[$i] + ".translateZ" ) -scale -0.01;
+		
+		attachDeviceAttr -d "KinectCapture" -ax ( $KinectSkelNames[$i] + "_ORI:X" ) ( $KinectSkelNames[$i] + ".rotateX" );
+		setAttrMapping -d "KinectCapture" -ax ( $KinectSkelNames[$i] + "_ORI:X" ) -at ( $KinectSkelNames[$i] + ".rotateX" ) -scale -1.0;
+		attachDeviceAttr -d "KinectCapture" -ax ( $KinectSkelNames[$i] + "_ORI:Y" ) ( $KinectSkelNames[$i] + ".rotateY" );
+		attachDeviceAttr -d "KinectCapture" -ax ( $KinectSkelNames[$i] + "_ORI:Z" ) ( $KinectSkelNames[$i] + ".rotateZ" );
+		setAttrMapping -d "KinectCapture" -ax ( $KinectSkelNames[$i] + "_ORI:Z" ) -at ( $KinectSkelNames[$i] + ".rotateZ" ) -scale -1.0;
+	}
+	
+	attachDeviceAttr -d "KinectCapture" -ax "HAND_POS:X" "KINECT_HAND.translateX";
+	setAttrMapping -d "KinectCapture" -ax "HAND_POS:X" -at "KINECT_HAND.translateX" -scale 1.3;
+	attachDeviceAttr -d "KinectCapture" -ax "HAND_POS:Y" "KINECT_HAND.translateY";
+	setAttrMapping -d "KinectCapture" -ax "HAND_POS:Y" -at "KINECT_HAND.translateY" -scale 1.3;
+	attachDeviceAttr -d "KinectCapture" -ax "HAND_POS:Z" "KINECT_HAND.translateZ";
+	setAttrMapping -d "KinectCapture" -ax "HAND_POS:Z" -at "KINECT_HAND.translateZ" -scale 1.3;
+
+}
+
+global proc mayaKinectCaptureTest.CallBacks.discDevice(){
+	defineDataServer -u -d KinectCapture;
+}
+
+global proc mayaKinectCaptureTest.CallBacks.makeNull(){
+
+	global string $KinectSkelNames[];
+	
+	int $i = 0;
+	for( $i = 0; $i < 24; ++$i ){
+		spaceLocator -n $KinectSkelNames[$i] -p 0 0 0;
+	}
+
+	spaceLocator -n "KINECT_HAND" -p 0 0 0;
+
+}
+
+global proc mayaKinectCaptureTest.CallBacks.OpenCommandPort(){
+
+	commandPort -name ( ":" + `intFieldGrp -q -v1 KinectTest_IntFieldGrp_CmdPort` );
+
+}
+
+global proc mayaKinectCaptureTest(){
+
+	if ( eval("window -exists mayaKinectCaptureTestUI_MainWindow" ) == true ){
+		return;
+	}
+	
+	string $hwnd = `window	-title "Kinect capture test"
+							-sizeable true
+							-menuBar true
+							mayaKinectCaptureTestUI_MainWindow`;
+
+	string $masterLayout = `columnLayout`;
+	setParent..;
+
+	//Buttons
+	setParent $masterLayout;
+
+	columnLayout -adjustableColumn 1;
+		textFieldGrp -w 200 -l "Server Address" -cw2 100 100 -tx "localhost" KinectTest_TextFieldGrp_ServerAddress;
+		intFieldGrp -w 200 -l "port" -nf 1 -cw2 100 100 -v1 9999 KinectTest_IntFieldGrp_Port;
+	
+		separator -w 200;
+
+		button -w 200 -al "center" -l "Make Nulls" -c "mayaKinectCaptureTest.CallBacks.makeNull()";
+		separator -w 200;
+		rowLayout -nc 2 -cw2 100 100;
+			button -w 100 -al "center" -l "Connect" -c "mayaKinectCaptureTest.CallBacks.connectDevice()";
+			button -w 100 -al "center" -l "Disconnect" -c "mayaKinectCaptureTest.CallBacks.discDevice()";
+		setParent..;
+	
+		separator -w 200;
+		intFieldGrp -w 200 -l "Command Port" -nf 1 -cw2 100 100 -v1 9998 KinectTest_IntFieldGrp_CmdPort;
+		button -w 200 -al "center" -l "Open CommandPort" -c "mayaKinectCaptureTest.CallBacks.OpenCommandPort()";
+	
+	setParent..;
+	
+	window -e -w 210 -h 200 $hwnd;
+	
+	showWindow $hwnd;
+	
+	
+}
+
