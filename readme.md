@@ -28,11 +28,13 @@ Also provided in this Git repository is the work of Mirage, found in the folder 
 
 1.	Run the `MayaOpenNIServer.exe` executable found within the `MayaOpenNIServer\bin` folder. Once the Kinect footage is visible on screen (this can take a little while) you need stand in front of the Kinect and hold a surrender pose, like so:
 
-
+	<img src="https://raw.githubusercontent.com/torbensko/Kinect-to-Maya-motion-capture/master/readme_src/kinect_surrender.jpg" alt="Surrender pose" />
 
 2.	Once you're satisfied it's working, click the 'Start Server' button
 
 3.	Open Maya and open the script editor. A shortcut to the script editor is pictured below:
+
+	<img src="https://raw.githubusercontent.com/torbensko/Kinect-to-Maya-motion-capture/master/readme_src/script_editor.jpg" alt="Script editor button" />
 
 4.	Under the MEL tab, enter the following code:
 
@@ -41,6 +43,8 @@ Also provided in this Git repository is the work of Mirage, found in the folder 
 		showMocapWindow();
 
 	Execute this code using one of the blue arrow buttons located at the top of the script editor window. The following window should appear:
+
+	<img src="https://raw.githubusercontent.com/torbensko/Kinect-to-Maya-motion-capture/master/readme_src/controls.jpg" alt="Mocap controls" />
 
 
 5.	Using the windows that pop up you can then...
