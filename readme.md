@@ -1,11 +1,11 @@
-# LEGAL STUFF
+# Legal Stuff
 
 My code, namely the files found under the 'KinectMocap' directory, is provided under a Creative Commons Attribution license (http://creativecommons.org/licenses/by/3.0/). As such, you are free to use the code for any purpose as long as you remember to mention our names (Torben Sko and Beau Vardos) at some point. Also please note that my code is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 Also provided in this Git repository is the work of Mirage, found in the folder titled 'Mirages MayaOpenNIServer (version)'. For licensing details, please consult Mirage's homepage (http://d.hatena.ne.jp/Mirage/)
 
 
-# SETTING UP
+# Setting Up
 
 1.	To start make sure you have...
 
@@ -24,7 +24,7 @@ Also provided in this Git repository is the work of Mirage, found in the folder 
 4.	Place the remaining contents of the `MayaOpenNIServer` folder somewhere on your computer.
 
 
-# CAPTURING
+# Capturing
 
 1.	Run the `MayaOpenNIServer.exe` executable found within the `MayaOpenNIServer\bin` folder. Once the Kinect footage is visible on screen (this can take a little while) you need stand in front of the Kinect and hold a surrender pose, like so:
 
@@ -60,7 +60,7 @@ Also provided in this Git repository is the work of Mirage, found in the folder 
 	- *Auto rig:* creates and attaches some geometry to the Kinect locators. You can do this either before or after recording the movement, however if done before, it could cause your computer to slow down during the recording process
 
 
-# COMPOSITING (IN BRIEF)
+# Compositing in brief
 
 1.	Film a background for your character
 
